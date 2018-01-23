@@ -3,7 +3,8 @@ module.exports = class Scheduler{
     this.patients = patients
   }
 
-  findAvailablePatientsByLocation(){
-
+  findAvailablePatientsByLocation(lat, long){
+    console.log(lat, long)
+    return this.patients[0];
   }
 }
