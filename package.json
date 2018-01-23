@@ -4,7 +4,8 @@
   "description": "A service that facilitates scheduling appointments and meetings.",
   "main": "index.js",
   "scripts": {
-    "dev": "node index.js"
+    "dev": "node index.js",
+    "test": "jest"
   },
   "repository": "git@github.com:jcksncllwy/full-stack-interview.git",
   "author": "Jackson Callaway <jcksncllwy@gmail.com>",
@@ -17,5 +18,9 @@
     "graphql": "^0.12.3",
     "graphql-tools": "^2.18.0",
     "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "graphql-tester": "^0.0.5",
+    "jest": "^22.1.4"
   }
 }
