@@ -3,7 +3,8 @@ const bodyParser = require('body-parser');
 const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const fs = require('fs');
-const Scheduler = require('Scheduler.js')
+const {find} = require('lodash');
+const Scheduler = require('./Scheduler.js');
 
 const patients = JSON.parse(fs.readFileSync('./sample-data/patients.json', 'utf8'));
 const patientScheduler = new Scheduler(patients);
@@ -11,26 +12,30 @@ const patientScheduler = new Scheduler(patients);
 
 // The GraphQL schema in string form
 const typeDefs = `
-  type Query { patients: [Patient] }
+  type Query {
+    patient(id: String): Patient
+    location(lat: String, long: String): [Patient]
+  }
   type Patient {
     id: String!,
     name: String,
-    location: {
-      latitude : String,
-      longitude : String
-    },
+    location: Location,
     age : Int,
     acceptedOffers : Int,
     canceledOffers : Int,
     averageReplyTime : Int,
+  }
+  type Location {
+    latitude : String,
+    longitude : String
   }
 `;
 
 // The resolvers
 const resolvers = {
   Query: {
-    patients: (_, { id }) => find(patients, {'id': id}),
-    availablePatients: (_, { location }) => patientScheduler.findAvailablePatientsByLocation(location)
+    patient: (_, { id }) => find(patients, {'id': id}),
+    location: (_, { location }) => patientScheduler.findAvailablePatientsByLocation(location)
   },
 };
 
