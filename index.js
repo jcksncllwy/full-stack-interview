@@ -4,7 +4,9 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const { makeExecutableSchema } = require('graphql-tools');
 const fs = require('fs');
 const {find} = require('lodash');
+
 const Scheduler = require('./Scheduler.js');
+const config = require('./config.js');
 
 const patients = JSON.parse(fs.readFileSync('./sample-data/patients.json', 'utf8'));
 const patientScheduler = new Scheduler(patients);
@@ -49,12 +51,12 @@ const schema = makeExecutableSchema({
 const app = express();
 
 // The GraphQL endpoint
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema }));
+app.use(`/${config.GQL_API_ENDPOINT}`, bodyParser.json(), graphqlExpress({ schema }));
 
 // GraphiQL, a visual editor for queries
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+app.use(`/${config.GIQL_ENDPOINT}`, graphiqlExpress({ endpointURL: `/${config.GQL_API_ENDPOINT}` }));
 
 // Start the server
-app.listen(3000, () => {
+app.listen(config.APP_PORT, () => {
   console.log('Go to http://localhost:3000/graphiql to run queries!');
 });
