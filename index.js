@@ -16,7 +16,7 @@ const patientScheduler = new Scheduler(patients);
 const typeDefs = `
   type Query {
     patient(id: String): Patient
-    location(lat: String, long: String): [Patient]
+    patients(lat: String, long: String): [Patient]
   }
   type Patient {
     id: String!,
@@ -37,7 +37,7 @@ const typeDefs = `
 const resolvers = {
   Query: {
     patient: (_, { id }) => find(patients, {'id': id}),
-    location: (_, { lat, long }) => patientScheduler.findAvailablePatientsByLocation(lat,long)
+    patients: (_, { lat, long }) => patientScheduler.findAvailablePatientsByLocation(lat,long)
   },
 };
 
