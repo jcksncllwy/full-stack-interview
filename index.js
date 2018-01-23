@@ -37,7 +37,7 @@ const typeDefs = `
 const resolvers = {
   Query: {
     patient: (_, { id }) => find(patients, {'id': id}),
-    location: (_, { location }) => patientScheduler.findAvailablePatientsByLocation(location)
+    location: (_, { lat, long }) => patientScheduler.findAvailablePatientsByLocation(lat,long)
   },
 };
 
