@@ -1,5 +1,7 @@
-var distance = require('geo-distance');
-var {each} = require('lodash');
+const isUndefined = require("is-undefined");
+const distance = require('geo-distance');
+const Heap = require('heap');
+const {each} = require('lodash');
 
 module.exports = class Scheduler{
   constructor(patients){
@@ -7,18 +9,21 @@ module.exports = class Scheduler{
   }
 
   findAvailablePatientsByLocation(lat, long){
-    let results = [];
-
     each(this.patients, (p)=>{
+      if(isUndefined(p.score)){
+        p.score = 0;
+      } else {
+        return; // patient has already been scored
+      }
+
       const dist = distance.between(
         {lat,long},
         {lat:p.location.latitude, long: p.location.longitude}
       )
-      if(dist<distance('1 km')){
-        results.push(p);
-      }
+
+      p.score = p.age;
     })
 
-    return results;
+    return Heap.nlargest(this.patients, 10, (a,b)=>a.score-b.score);
   }
 }
