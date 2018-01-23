@@ -1,7 +1,7 @@
 const config = require('../config.js');
 const tester = require('graphql-tester').tester;
 
-describe('A patient query', function() {
+describe('A query', function() {
   const self = this;
 
   beforeAll(() => {
@@ -11,8 +11,21 @@ describe('A patient query', function() {
    });
   });
 
-  it('should return a valid patient', () => {
+  it('should return a valid patient by ID', () => {
     self.test('{patient(id: "541d25c9-9500-4265-8967-240f44ecf723") { name } }')
+    .then((response) => {
+        expect(response.status).toBe(200);
+        expect(response.success).toBe(true);
+        expect(response.data.patient.name).toBe('Samir Pacocha');
+    })
+    .catch(err => {
+      expect(err).toBe(null);
+      done();
+    });
+  });
+
+  it('should return valid patients by location', () => {
+    self.test('{location(lat:"46.7110",long:"-63.1150") { name } }')
     .then((response) => {
         expect(response.status).toBe(200);
         expect(response.success).toBe(true);
